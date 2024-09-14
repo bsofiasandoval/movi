@@ -26,7 +26,7 @@ struct eCheqView: View {
                         Button(action: {
                             activeSheet = .send
                         }, label: { Label("Send", systemImage: "square.and.arrow.up") })
-                        .fixedSize()
+                        .buttonStyle(.borderless)
 
                         Spacer()
                         Divider()
@@ -35,7 +35,7 @@ struct eCheqView: View {
                         Button(action: {
                             activeSheet = .receive
                         }, label: { Label("Receive", systemImage: "square.and.arrow.down") })
-                        .fixedSize()
+                        .buttonStyle(.borderless)
                     }
                     .padding()
                 }
