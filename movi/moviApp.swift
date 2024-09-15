@@ -17,6 +17,8 @@ let MoBiId = "66e614079683f20dd5189c28"
 @main
 struct moviApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @StateObject private var navigationState = NavigationState()
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -35,5 +37,6 @@ struct moviApp: App {
             LoginView()
         }
         .modelContainer(sharedModelContainer)
+        .environmentObject(AppStateManager.shared.navigationState)
     }
 }

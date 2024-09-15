@@ -8,6 +8,19 @@
 import Foundation
 import AppIntents
 
+class AppStateManager {
+    static let shared = AppStateManager()
+    
+    let navigationState = NavigationState()
+    
+    private init() { }
+}
+
+class NavigationState: ObservableObject {
+    @Published var shouldNavigateToDestination = false
+    @Published var amount: Double = 0.0
+}
+
 struct CreateECheq: AppIntent {
     static let title: LocalizedStringResource = "Create ECheq"
     
@@ -16,10 +29,19 @@ struct CreateECheq: AppIntent {
     
     func perform() async throws -> some IntentResult {
 //        print("HERE")
-        createECheq(checkingAccountId: "66e62ed29683f20dd5189c6e", phoneNumber: "123-456-7890", amount: amount){
-            transferId in
-            print(transferId)
-        }
+//        createECheq(checkingAccountId: "66e62ed29683f20dd5189c6e", phoneNumber: "123-456-7890", amount: amount){
+//            transferId in
+//            print(transferId)
+//        }
+        
+        let navigationState = AppStateManager.shared.navigationState
+                
+                // Update the state to trigger navigation in the main app
+                DispatchQueue.main.async {
+                    navigationState.shouldNavigateToDestination = true
+                    navigationState.amount = amount
+                    print("HERE")
+                }
         return .result()
     }
     
@@ -28,7 +50,7 @@ struct CreateECheq: AppIntent {
 
 struct eCheqShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
-        AppShortcut(intent: CreateECheq(), phrases: ["Create \(.applicationName)"], shortTitle: "Create mobi", systemImageName: "dollarsign.circle")
+        AppShortcut(intent: CreateECheq(), phrases: ["Create uu \(.applicationName)"], shortTitle: "Create uu mobi", systemImageName: "dollarsign.circle")
     }
 }
 
