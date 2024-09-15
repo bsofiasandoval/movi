@@ -12,7 +12,8 @@ struct ExploreView: View {
         NavigationStack {
             VStack(spacing: 0) {
                 GeometryReader { geometry in
-                    VStack {
+                    VStack (spacing: 0){
+                        AppLogoHeader()
                         Spacer()
                         Text("Explore your financial freedom")
                             .font(.system(size: 30))
@@ -22,7 +23,7 @@ struct ExploreView: View {
                         Spacer()
                     }
                     .frame(width: geometry.size.width, height: geometry.size.height / 2 )
-                    .background(Color(hex: "#0d507a"))
+                    .background(randomDarkBlueGradient())
                 }
                 .frame(height: UIScreen.main.bounds.height / 3)
                 

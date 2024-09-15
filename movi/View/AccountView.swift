@@ -18,7 +18,9 @@ struct AccountView: View {
         NavigationStack {
             VStack(spacing: 0) {
                 GeometryReader { geometry in
-                    VStack {
+                    VStack(spacing:0){
+                        Spacer()
+                        AppLogoHeader()
                         Spacer()
                         Text("Good Morning, \(customer.first_name)!")
                             .font(.system(size: 30))
@@ -28,7 +30,7 @@ struct AccountView: View {
                         Spacer()
                     }
                     .frame(width: geometry.size.width, height: geometry.size.height / 2 )
-                    .background(Color(hex: "#0d507a"))
+                    .background(randomDarkBlueGradient())
                 }
                 .frame(height: UIScreen.main.bounds.height / 3)
                 
