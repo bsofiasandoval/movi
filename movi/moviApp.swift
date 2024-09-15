@@ -16,6 +16,7 @@ let MoBiId = "66e614079683f20dd5189c28"
 
 @main
 struct moviApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
