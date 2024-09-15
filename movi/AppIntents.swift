@@ -40,7 +40,6 @@ struct CreateECheq: AppIntent {
                 DispatchQueue.main.async {
                     navigationState.shouldNavigateToDestination = true
                     navigationState.amount = amount
-                    print("HERE")
                 }
         return .result()
     }
@@ -50,7 +49,7 @@ struct CreateECheq: AppIntent {
 
 struct eCheqShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
-        AppShortcut(intent: CreateECheq(), phrases: ["Create uu \(.applicationName)"], shortTitle: "Create uu mobi", systemImageName: "dollarsign.circle")
+        AppShortcut(intent: CreateECheq(), phrases: ["Create \(.applicationName)"], shortTitle: "Create mobi", systemImageName: "dollarsign.circle")
     }
 }
 

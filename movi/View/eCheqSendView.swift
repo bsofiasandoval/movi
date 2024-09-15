@@ -37,10 +37,6 @@ class NFCReader: NSObject, ObservableObject, NFCNDEFReaderSessionDelegate {
         session?.begin()
     }
     
-    func readerSessionDidBecomeActive(_ session: NFCNDEFReaderSession) {
-        print("HERE")
-    }
-    
     // MARK: - NFCNDEFReaderSessionDelegate Methods
     
     func readerSession(_ session: NFCNDEFReaderSession, didInvalidateWithError error: Error) {
@@ -90,7 +86,6 @@ struct eCheqSendView: View {
     }
     
     var body: some View {
-<<<<<<< HEAD
         NavigationView {
             ScrollView {
                 VStack(spacing: 0) {
@@ -197,70 +192,7 @@ struct eCheqSendView: View {
                         }
                     }
                     .padding()
-=======
-        Form {
-            TextField("PhoneNumber", text: $phoneNumber, prompt: Text("PhoneNUmber"))
-            
-            TextField("Amount", text: $amount, prompt: Text("Amount"))
-                .keyboardType(.decimalPad)
-            
-            Picker("Account", selection: $account, content: {
-                Text("None").tag(Optional<Account>(nil))
-                ForEach(accounts, id: \._id){
-                    account in
-                    Text(account.nickname).tag(account)
-                }
-            })
-            
-            Button(action: {
-                nfcReader.beginScanning()
-                
-            }) {
-                Text("Scan VCard")
-            }
-            
-            Button(action: {
-                // Try to convert amount to Double
-                guard let amount = Double(amount) else {
-                    print("Invalid amount. Please enter a valid number.")
-                    return
-                }
-                
-                // Validate phone number (assuming a simple validation)
-                guard isValidPhoneNumber(phoneNumber) else {
-                    print("Invalid phone number. Please enter a valid phone number.")
-                    return
-                }
-                
-                guard let account = account else {
-                    print("Invalid account. Please select one")
-                    return
-                }
-                
 
-                authenticate { success in
-                    if success {
-                        print("Authentication succeeded")
-                    
-                
-                    createECheq(checkingAccountId: account._id, phoneNumber: phoneNumber, amount: amount) { result in
-                        DispatchQueue.main.async { // Ensure UI updates happen on the main thread
-                            switch result {
-                            case .success(let transferID):
-                                print("eCheq created with transfer ID: \(transferID)")
-                                dismiss()
-                                // You can display an alert or update the UI here to notify the user of success
-                            case .failure(let error):
-                                print("Failed to create eCheq: \(error.localizedDescription)")
-                                // You can display an alert or update the UI here to notify the user of failure
-                            }
-                        }
-                    }
-                
-                    } else {
-                        print("Authentication failed")
-                    }
->>>>>>> 2a5530b (asdf)
                 }
             }
             .onChange(of: nfcReader.scannedText, {
@@ -272,7 +204,6 @@ struct eCheqSendView: View {
             }
 
         }
-<<<<<<< HEAD
     }
     
     private func sendECheq() {
@@ -306,15 +237,7 @@ struct eCheqSendView: View {
                     showingAlert = true
                 }
             }
-=======
-        .onChange(of: nfcReader.scannedText, {
-            if let newPhoneNumber = loadVCard(nfcReader.scannedText) {
-                phoneNumber = newPhoneNumber
-            }
-        })
-        .alert(isPresented: $nfcReader.showAlert) {
-            Alert(title: Text("NFC"), message: Text(nfcReader.alertMessage), dismissButton: .default(Text("OK")))
->>>>>>> 2a5530b (asdf)
+
         }
     }
     
