@@ -33,7 +33,7 @@ struct LoginView: View {
                     
                     NavigationLink("Login", destination: {
                         // TODO credential validation
-                        ContentView()
+                        ContentView(customer: Customer(_id: "66e613bc9683f20dd5189c26", first_name: "Alonso", last_name: "Huerta", address: Address(street_number: "333", street_name: "Street Name", city: "MTY", state: "NL", zip: "96400")))
                             .navigationBarBackButtonHidden()
                     })
                     .buttonStyle(.borderless)

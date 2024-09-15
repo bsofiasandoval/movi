@@ -8,6 +8,12 @@
 import SwiftUI
 import SwiftData
 
+// MARK: - Global Constants
+
+let baseURL = "http://api.nessieisreal.com"
+let key = "c4829ff50727c58165e22d423e3c4e9f"
+let MoBiId = "66e614079683f20dd5189c28"
+
 @main
 struct moviApp: App {
     var sharedModelContainer: ModelContainer = {
@@ -25,7 +31,7 @@ struct moviApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            LoginView()
         }
         .modelContainer(sharedModelContainer)
     }

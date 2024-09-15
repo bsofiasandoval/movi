@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import Contacts
 
 struct eCheqView: View {
     @State private var activeSheet: ActiveSheet?
+    
+    @State private var allContacts = [CNContact]()
 
     enum ActiveSheet: Identifiable {
         case send, receive, transaction
@@ -40,7 +43,10 @@ struct eCheqView: View {
                     .padding()
                 }
                 Section("eCheqs") {
-
+                    ForEach(allContacts){
+                        contact in
+                        Text(contact.givenName)
+                    }
                 }
             }
         }
@@ -55,6 +61,8 @@ struct eCheqView: View {
             }
         }
     }
+    
+    
 }
 
 #Preview {
