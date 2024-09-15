@@ -9,6 +9,7 @@ import Foundation
 import CoreNFC
 import Contacts
 import ContactsUI
+import SwiftUI
 
 class NFCReader: NSObject, ObservableObject, NFCNDEFReaderSessionDelegate {
     @Published var scannedText: String = ""
@@ -53,14 +54,17 @@ class NFCReader: NSObject, ObservableObject, NFCNDEFReaderSessionDelegate {
     }
 }
 
-import SwiftUI
+
 
 struct eCheqSendView: View {
     @StateObject private var nfcReader = NFCReader()
     @State private var phoneNumber = ""
     @State private var amount = ""
     
-    var accounts: [Account] = []
+    @Environment(\.dismiss) var dismiss
+    
+    var customer: Customer
+    var accounts: [Account]
     @State private var account: Account? = nil
     
     var body: some View {
@@ -110,6 +114,7 @@ struct eCheqSendView: View {
                         switch result {
                         case .success(let transferID):
                             print("eCheq created with transfer ID: \(transferID)")
+                            dismiss()
                             // You can display an alert or update the UI here to notify the user of success
                         case .failure(let error):
                             print("Failed to create eCheq: \(error.localizedDescription)")
@@ -154,5 +159,5 @@ struct eCheqSendView: View {
 }
 
 #Preview {
-    eCheqSendView(accounts: [Account(_id: "66e62ed29683f20dd5189c6e", type: "Checking", nickname: "Debit", rewards: 0, balance: 100.0, account_number: nil, customer_id: "66e613bc9683f20dd5189c26")])
+    eCheqSendView(customer: Customer(_id: "66e613bc9683f20dd5189c26", first_name: "Alonso", last_name: "Huerta", address: Address(street_number: "333", street_name: "Street Name", city: "MTY", state: "NL", zip: "96400")), accounts: [Account(_id: "66e62ed29683f20dd5189c6e", type: "balance", nickname: "Debit", rewards: 0, balance: 1000.0, account_number: nil, customer_id: "66e613bc9683f20dd5189c26")])
 }
