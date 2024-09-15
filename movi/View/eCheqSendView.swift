@@ -64,26 +64,23 @@ class NFCReader: NSObject, ObservableObject, NFCNDEFReaderSessionDelegate {
 }
 
 struct eCheqSendView: View {
+    @State var amount:String = ""
+    var customer: Customer
+    var accounts: [Account]
     @StateObject private var nfcReader = NFCReader()
-    @State private var phoneNumber = ""
+    @State  var phoneNumber = ""
 
-    @State private var amount = ""
+
     @State private var showingAlert = false
     @State private var alertMessage = ""
 
     
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) private var dismiss
     
-    var customer: Customer
-    var accounts: [Account]
+
 
     @State private var account: Account? = nil
-    
-    init(customer: Customer, accounts: [Account]) {
-        self.customer = customer
-        self.accounts = accounts
-        self._account = State(initialValue: accounts.first ?? Account(_id: "", type: "", nickname: "", rewards: 0, balance: 0, account_number: nil, customer_id: ""))
-    }
+
     
     var body: some View {
         NavigationView {
