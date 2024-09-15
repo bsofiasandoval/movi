@@ -78,10 +78,15 @@ struct AccountView: View {
           
                 Spacer()
             }
+            
         }
+        
+       
     }
 }
 
 #Preview {
     AccountView()
 }
+
+
