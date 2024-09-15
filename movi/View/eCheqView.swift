@@ -82,7 +82,7 @@ struct eCheqView: View {
         .sheet(item: $activeSheet) { sheet in
             switch sheet {
             case .send:
-                Text("Send")
+                eCheqSendView()
             case .receive:
                 Text("Receive")
             case .transaction:
