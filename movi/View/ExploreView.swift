@@ -27,27 +27,27 @@ struct ExploreView: View {
                 }
                 .frame(height: UIScreen.main.bounds.height / 3)
                 
-               
                 VStack(spacing: 14) {
                     NavigationLink(destination: MicroCreditView()) {
-                        HStack {
+                        HStack(alignment: .top) {
                             Image(systemName: "banknote")
                                 .resizable()
                                 .scaledToFit()
-                                .frame(height: 40)
+                                .frame(width: 40, height: 40)
                                 .foregroundColor(.white)
                                 .padding(.leading, 10)
-                            Spacer()
-                            VStack{
+                            
+                            VStack(alignment: .leading, spacing: 5) {
                                 Text("Micro Credit")
-                                  .font(.system(size: 23))
-                                  .foregroundColor(.white)
-                                  .font(.title3)
-                                  .bold()
+                                    .font(.system(size: 23, weight: .bold))
+                                    .foregroundColor(.white)
                                 Text("See how much you're approved to borrow as a trusted MoBi Customer")
                                     .foregroundColor(.white)
+                                    .multilineTextAlignment(.leading)
                                     .font(.body)
                             }
+                            .padding(.leading, 10)
+                            
                             Spacer()
                         }
                         .padding()
@@ -59,68 +59,67 @@ struct ExploreView: View {
                     }
 
                     NavigationLink(destination: MicroSavingsView()) {
-                        HStack {
+                        HStack(alignment: .top) {
                             Image(systemName: "cube.box.fill")
                                 .resizable()
                                 .scaledToFit()
-                                .frame(height: 50)
+                                .frame(width: 40, height: 40)
                                 .foregroundColor(.white)
                                 .padding(.leading, 10)
-                            Spacer()
-                            VStack{
+                            
+                            VStack(alignment: .leading, spacing: 5) {
                                 Text("Micro Savings")
-                                    .font(.system(size: 23))
+                                    .font(.system(size: 23, weight: .bold))
                                     .foregroundColor(.white)
-                                    .font(.title3)
-                                    .bold()
                                 Text("Learn about what you can do to save money the easy way.")
                                     .foregroundColor(.white)
+                                    .multilineTextAlignment(.leading)
                                     .font(.body)
-                                
                             }
+                            .padding(.leading, 10)
+                            
                             Spacer()
                         }
                         .padding()
                         .frame(maxWidth: .infinity)
                         .frame(height: 140)
-                        .background(randomDarkBlueGradient())
+                        .background(blueComplementaryColor())
                         .cornerRadius(10)
                         .shadow(radius: 5)
                     }
 
                     NavigationLink(destination: MicroInsuranceView()) {
-                        HStack {
-                            Image(systemName: "shield")
+                        HStack(alignment: .top) {
+                            Image(systemName: "shield.fill")
                                 .resizable()
                                 .scaledToFit()
-                                .frame(height: 40)
+                                .frame(width: 40, height: 40)
                                 .foregroundColor(.white)
                                 .padding(.leading, 10)
-                            Spacer()
-                            VStack {
+                            
+                            VStack(alignment: .leading, spacing: 5) {
                                 Text("Micro Insurance")
-                                   .font(.system(size: 23))
-                                   .foregroundColor(.white)
-                                   .font(.title3)
-                                   .bold()
+                                    .font(.system(size: 23, weight: .bold))
+                                    .foregroundColor(.white)
                                 Text("Explore insurance options for short or long-term earnings")
+                                    .multilineTextAlignment(.leading)
                                     .foregroundColor(.white)
                                     .font(.body)
-                                
-                                   
                             }
+                            .padding(.leading, 10)
+                            
                             Spacer()
                         }
                         .padding()
                         .frame(maxWidth: .infinity)
                         .frame(height: 140)
-                        .background(randomDarkBlueGradient())
+                        .background(blueComplementaryColor())
                         .cornerRadius(10)
                         .shadow(radius: 5)
                     }
                 }
                 .padding(.horizontal, 15)
-                .padding(.top, -90) 
+                .padding(.top, -90)
                 Spacer()
             }
         }
@@ -128,6 +127,18 @@ struct ExploreView: View {
 }
 
 // Helper gradient functio
+
+
+func blueComplementaryColor() -> Color {
+    // Calculate the complementary color (opposite on the color wheel)
+    let complement = Color(
+        hue: 0.08, // Approximately 30 degrees on the color wheel (180 degrees from blue)
+        saturation: 0.8,
+        brightness: 0.9
+    )
+    
+    return complement
+}
 
 
 func randomDarkBlueGradient() -> LinearGradient {
@@ -142,6 +153,8 @@ func randomDarkBlueGradient() -> LinearGradient {
         endPoint: .bottomTrailing
     )
 }
+
+ 
 
 extension Color {
     init(hex: String) {

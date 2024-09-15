@@ -16,6 +16,8 @@ struct Contact: Identifiable {
 
 struct eCheqView: View {
     @State private var activeSheet: ActiveSheet?
+    var customer: Customer
+    @State var accounts: [Account]
 
     enum ActiveSheet: Identifiable {
         case send, receive, transaction
@@ -111,10 +113,37 @@ struct eCheqView: View {
                 }
             }
         }
+        .onAppear(perform: {
+            getAccounts(customerId: customer._id) { result in
+                switch result {
+                case .success(let accounts):
+                    // Handle the array of accounts
+                    DispatchQueue.main.async {
+                        // For example, print account details
+                        self.accounts = accounts
+                        for account in accounts {
+                            print("Account ID: \(account._id)")
+                            print("Type: \(account.type)")
+                            print("Nickname: \(account.nickname)")
+                            print("Balance: \(account.balance)")
+                            print("-----")
+                        }
+                        // If you're updating UI elements, do it here
+                        // e.g., self.accounts = accounts
+                    }
+                case .failure(let error):
+                    // Handle the error
+                    DispatchQueue.main.async {
+                        print("Error retrieving accounts: \(error.localizedDescription)")
+                        // Show an error message to the user or log the error
+                    }
+                }
+            }
+        })
         .sheet(item: $activeSheet) { sheet in
             switch sheet {
             case .send:
-                Text("Send")
+                eCheqSendView(customer: customer, accounts: accounts)
             case .receive:
                 Text("Receive")
             case .transaction:
@@ -125,5 +154,5 @@ struct eCheqView: View {
 }
 
 #Preview {
-    eCheqView()
+    eCheqView(customer: Customer(_id: "66e613bc9683f20dd5189c26", first_name: "Alonso", last_name: "Huerta", address: Address(street_number: "333", street_name: "Street Name", city: "MTY", state: "NL", zip: "96400")), accounts: [Account(_id: "66e62ed29683f20dd5189c6e", type: "balance", nickname: "Debit", rewards: 0, balance: 1000.0, account_number: nil, customer_id: "66e613bc9683f20dd5189c26")])
 }
