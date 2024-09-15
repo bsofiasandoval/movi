@@ -10,6 +10,7 @@ import CoreNFC
 import Contacts
 import ContactsUI
 import SwiftUI
+import LocalAuthentication
 
 class NFCReader: NSObject, ObservableObject, NFCNDEFReaderSessionDelegate {
     @Published var scannedText: String = ""
@@ -17,6 +18,12 @@ class NFCReader: NSObject, ObservableObject, NFCNDEFReaderSessionDelegate {
     @Published var alertMessage: String = ""
     
     var session: NFCNDEFReaderSession?
+    
+    func readerSessionDidBecomeActive(_ session: NFCNDEFReaderSession) {
+            // This method is called when the NFC session becomes active.
+            // You can leave it empty if you don't need to handle this event.
+            print("NFC session became active")
+        }
     
     func beginScanning() {
         guard NFCNDEFReaderSession.readingAvailable else {
@@ -39,18 +46,20 @@ class NFCReader: NSObject, ObservableObject, NFCNDEFReaderSessionDelegate {
     func readerSession(_ session: NFCNDEFReaderSession, didInvalidateWithError error: Error) {
         DispatchQueue.main.async {
             self.alertMessage = error.localizedDescription
-            self.showAlert = true
+//            self.showAlert = true
         }
     }
     
     func readerSession(_ session: NFCNDEFReaderSession, didDetectNDEFs messages: [NFCNDEFMessage]) {
+        print("HERE")
         for message in messages {
             for record in message.records {
                 if let payload = String(data: record.payload, encoding: .utf8) {
                     DispatchQueue.main.async {
+                        print("\(payload)")
                         self.scannedText = payload
                         self.alertMessage = "NFC Tag Detected: \(payload)"
-                        self.showAlert = true
+//                        self.showAlert = true
                     }
                 }
             }
@@ -61,9 +70,11 @@ class NFCReader: NSObject, ObservableObject, NFCNDEFReaderSessionDelegate {
 struct eCheqSendView: View {
     @StateObject private var nfcReader = NFCReader()
     @State private var phoneNumber = ""
+
     @State private var amount = ""
     @State private var showingAlert = false
     @State private var alertMessage = ""
+
     
     @Environment(\.dismiss) var dismiss
     
@@ -79,6 +90,7 @@ struct eCheqSendView: View {
     }
     
     var body: some View {
+<<<<<<< HEAD
         NavigationView {
             ScrollView {
                 VStack(spacing: 0) {
@@ -185,6 +197,70 @@ struct eCheqSendView: View {
                         }
                     }
                     .padding()
+=======
+        Form {
+            TextField("PhoneNumber", text: $phoneNumber, prompt: Text("PhoneNUmber"))
+            
+            TextField("Amount", text: $amount, prompt: Text("Amount"))
+                .keyboardType(.decimalPad)
+            
+            Picker("Account", selection: $account, content: {
+                Text("None").tag(Optional<Account>(nil))
+                ForEach(accounts, id: \._id){
+                    account in
+                    Text(account.nickname).tag(account)
+                }
+            })
+            
+            Button(action: {
+                nfcReader.beginScanning()
+                
+            }) {
+                Text("Scan VCard")
+            }
+            
+            Button(action: {
+                // Try to convert amount to Double
+                guard let amount = Double(amount) else {
+                    print("Invalid amount. Please enter a valid number.")
+                    return
+                }
+                
+                // Validate phone number (assuming a simple validation)
+                guard isValidPhoneNumber(phoneNumber) else {
+                    print("Invalid phone number. Please enter a valid phone number.")
+                    return
+                }
+                
+                guard let account = account else {
+                    print("Invalid account. Please select one")
+                    return
+                }
+                
+
+                authenticate { success in
+                    if success {
+                        print("Authentication succeeded")
+                    
+                
+                    createECheq(checkingAccountId: account._id, phoneNumber: phoneNumber, amount: amount) { result in
+                        DispatchQueue.main.async { // Ensure UI updates happen on the main thread
+                            switch result {
+                            case .success(let transferID):
+                                print("eCheq created with transfer ID: \(transferID)")
+                                dismiss()
+                                // You can display an alert or update the UI here to notify the user of success
+                            case .failure(let error):
+                                print("Failed to create eCheq: \(error.localizedDescription)")
+                                // You can display an alert or update the UI here to notify the user of failure
+                            }
+                        }
+                    }
+                
+                    } else {
+                        print("Authentication failed")
+                    }
+>>>>>>> 2a5530b (asdf)
                 }
             }
             .onChange(of: nfcReader.scannedText, {
@@ -196,6 +272,7 @@ struct eCheqSendView: View {
             }
 
         }
+<<<<<<< HEAD
     }
     
     private func sendECheq() {
@@ -229,6 +306,15 @@ struct eCheqSendView: View {
                     showingAlert = true
                 }
             }
+=======
+        .onChange(of: nfcReader.scannedText, {
+            if let newPhoneNumber = loadVCard(nfcReader.scannedText) {
+                phoneNumber = newPhoneNumber
+            }
+        })
+        .alert(isPresented: $nfcReader.showAlert) {
+            Alert(title: Text("NFC"), message: Text(nfcReader.alertMessage), dismissButton: .default(Text("OK")))
+>>>>>>> 2a5530b (asdf)
         }
     }
     
@@ -237,6 +323,7 @@ struct eCheqSendView: View {
             print("Failed to convert VCard string to Data.")
             return nil
         }
+        print(vCardData)
         do {
             let contacts = try CNContactVCardSerialization.contacts(with: vCardData)
             if let contact = contacts.first {
@@ -255,6 +342,31 @@ struct eCheqSendView: View {
         let phoneNumberRegex = "^[+]?[0-9]{10,15}$"
         let predicate = NSPredicate(format: "SELF MATCHES %@", phoneNumberRegex)
         return predicate.evaluate(with: phoneNumber)
+    }
+    
+    func authenticate(completion: @escaping (Bool) -> Void) {
+        let context = LAContext()
+        var error: NSError?
+
+        // Check whether biometric authentication is possible
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            // It's possible, so go ahead and use it
+            let reason = "We need to unlock your data."
+
+            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, authenticationError in
+                // Authentication has now completed
+                if success {
+                    // Authenticated successfully
+                    completion(true)
+                } else {
+                    // There was a problem
+                    completion(false)
+                }
+            }
+        } else {
+            // No biometrics available
+            completion(false)
+        }
     }
 }
 
