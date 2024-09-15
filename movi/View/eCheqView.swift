@@ -6,12 +6,8 @@
 //
 
 import SwiftUI
-import Contacts
-
 struct eCheqView: View {
     @State private var activeSheet: ActiveSheet?
-    
-    @State private var allContacts = [CNContact]()
 
     enum ActiveSheet: Identifiable {
         case send, receive, transaction
@@ -23,29 +19,62 @@ struct eCheqView: View {
 
     var body: some View {
         NavigationStack {
-            List {
-                Section("eCheq Actions") {
+            ZStack {
+                Color(hex: "#f2f2f7")
+                    .ignoresSafeArea()
+                
+                VStack {
+                    GeometryReader { geometry in
+                        VStack {
+                            Spacer()
+                            Text("MoBi ECheqs")
+                                .font(.system(size: 30))
+                                .multilineTextAlignment(.center)
+                                .bold()
+                                .foregroundColor(.white)
+                            Spacer()
+                        }
+                        .frame(width: geometry.size.width, height: geometry.size.height / 2 )
+                        .background(Color(hex: "#0d507a"))
+                    }
+                    .frame(height: UIScreen.main.bounds.height / 3)
+                    .padding(.bottom, -160)
+
+                    List {
+                        Section("eCheqs") {
+                            Spacer().frame(height: 100) // Adding more space for layout purposes
+                        }
+                    }
+                    .listStyle(PlainListStyle())
+                    .background(Color.clear)
+
                     HStack(alignment: .center) {
+                        Spacer()
                         Button(action: {
                             activeSheet = .send
-                        }, label: { Label("Send", systemImage: "square.and.arrow.up") })
-                        .buttonStyle(.borderless)
+                        }, label: {
+                            Label("Send", systemImage: "square.and.arrow.up")
+                                .frame(minWidth: 150, minHeight: 50) // Set button size
+                        })
+                        .background(Color(hex: "#0d507a")) // Main blue color
+                        .foregroundColor(.white) // White foreground
+                        .cornerRadius(10)
+                        .padding()
 
-                        Spacer()
-                        Divider()
                         Spacer()
 
                         Button(action: {
                             activeSheet = .receive
-                        }, label: { Label("Receive", systemImage: "square.and.arrow.down") })
-                        .buttonStyle(.borderless)
-                    }
-                    .padding()
-                }
-                Section("eCheqs") {
-                    ForEach(allContacts){
-                        contact in
-                        Text(contact.givenName)
+                        }, label: {
+                            Label("Receive", systemImage: "square.and.arrow.down")
+                                .frame(minWidth: 150, minHeight: 50) // Set button size
+                        })
+                        .background(Color(hex: "#0d507a"))
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                        .padding()
+                        
+                        Spacer()
                     }
                 }
             }
@@ -61,8 +90,6 @@ struct eCheqView: View {
             }
         }
     }
-    
-    
 }
 
 #Preview {
