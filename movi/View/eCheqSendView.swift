@@ -65,7 +65,7 @@ struct eCheqSendView: View {
     
     var customer: Customer
     var accounts: [Account]
-    @State private var account: Account? = nil
+    @State private var account: Account = Account(_id: "66e62ed29683f20dd5189c6e", type: "balance", nickname: "Debit", rewards: 0, balance: 1000.0, account_number: nil, customer_id: "66e613bc9683f20dd5189c26")
     
     var body: some View {
         Form {
@@ -103,10 +103,10 @@ struct eCheqSendView: View {
                 }
                 
                 // Check that the account is not nil
-                guard let account = self.account else {
-                    print("Account is missing.")
-                    return
-                }
+//                guard let account = self.account else {
+//                    print("Account is missing.")
+//                    return
+//                }
                 
                 // Call the createECheq function
                 createECheq(checkingAccountId: account._id, phoneNumber: phoneNumber, amount: amount) { result in

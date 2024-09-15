@@ -12,6 +12,9 @@ struct ContentView: View {
     var customer: Customer
     var accounts: [Account]
     
+    
+
+    
     var body: some View {
         TabView {
             AccountView(customer: customer, accounts: accounts).tabItem { Label("Account", systemImage: "person") }.tag(1)
