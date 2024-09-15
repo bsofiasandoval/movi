@@ -19,7 +19,6 @@ struct eCheqView: View {
     var customer: Customer
     @State var accounts: [Account]
 
-
     enum ActiveSheet: Identifiable {
         case send, receive, transaction
 

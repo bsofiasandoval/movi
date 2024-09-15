@@ -30,6 +30,10 @@ class NFCReader: NSObject, ObservableObject, NFCNDEFReaderSessionDelegate {
         session?.begin()
     }
     
+    func readerSessionDidBecomeActive(_ session: NFCNDEFReaderSession) {
+        print("HERE")
+    }
+    
     // MARK: - NFCNDEFReaderSessionDelegate Methods
     
     func readerSession(_ session: NFCNDEFReaderSession, didInvalidateWithError error: Error) {
@@ -65,7 +69,8 @@ struct eCheqSendView: View {
     
     var customer: Customer
     var accounts: [Account]
-    @State private var account: Account
+
+    @State private var account: Account? = nil
     
     init(customer: Customer, accounts: [Account]) {
         self.customer = customer
@@ -118,7 +123,7 @@ struct eCheqSendView: View {
                             
                             Button(action: {
                                 nfcReader.beginScanning()
-                                phoneNumber = loadVCard(nfcReader.scannedText) ?? ""
+                                
                             }) {
                                 HStack {
                                     Image(systemName: "viewfinder")
@@ -153,6 +158,8 @@ struct eCheqSendView: View {
                                 
                                 VStack {
                                     Picker("Account", selection: $account) {
+                                        Text("None").tag(Optional<Account>(nil))
+                                        
                                         ForEach(accounts, id: \._id) { account in
                                             Text(account.nickname).tag(account)
                                         }
@@ -174,11 +181,15 @@ struct eCheqSendView: View {
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                                 .shadow(color: .gray.opacity(0.5), radius: 5, x: 0, y: 2)
+
                         }
                     }
                     .padding()
                 }
             }
+            .onChange(of: nfcReader.scannedText, {
+                phoneNumber = loadVCard(nfcReader.scannedText) ?? ""
+            })
             .navigationBarHidden(true)
             .alert(isPresented: $showingAlert) {
                 Alert(title: Text("eCheq Status"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
@@ -196,6 +207,12 @@ struct eCheqSendView: View {
         
         guard isValidPhoneNumber(phoneNumber) else {
             alertMessage = "Please enter a valid phone number."
+            showingAlert = true
+            return
+        }
+        
+        guard let account = account else {
+            alertMessage = "Please enter a valid account"
             showingAlert = true
             return
         }
