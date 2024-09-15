@@ -6,7 +6,7 @@ The app offers features such as account balance viewing, transaction history, an
 
 ## Features
 
-- Bridging the gap between paper money and digital money in Mexico, supporting local commerce, driving new customers to banks, and making a step towards inclusive finance.
+- Bridging the gap between paper money and digital money in Mexico, supporting local commerce, driving new customers to banks, and making a big step towards inclusive finance.
 
 ## Contact
 Project Link: [https://github.com/alonso284/movi
