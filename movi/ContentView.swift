@@ -10,12 +10,13 @@ import SwiftData
 
 struct ContentView: View {
     var body: some View {
-        TabView(selection: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Selection@*/.constant(1)/*@END_MENU_TOKEN@*/) {
-            // Create mini-checks
-            
+        TabView {
             AccountView().tabItem { Label("Account", systemImage: "person") }.tag(1)
-            // Minicheck list
-            eCheqView().tabItem { Label("TODO", systemImage: "flowchart") }.tag(2)
+            eCheqView().tabItem { Label("eCheq", systemImage: "flowchart") }.tag(2)
+            ExploreView().tabItem { Label("Explore", systemImage: "magnifyingglass")}.tag(3)
+          
+           
+            
         }
     }
 }
