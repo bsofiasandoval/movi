@@ -54,80 +54,164 @@ class NFCReader: NSObject, ObservableObject, NFCNDEFReaderSessionDelegate {
     }
 }
 
-
-
 struct eCheqSendView: View {
     @StateObject private var nfcReader = NFCReader()
     @State private var phoneNumber = ""
     @State private var amount = ""
+    @State private var showingAlert = false
+    @State private var alertMessage = ""
     
     @Environment(\.dismiss) var dismiss
     
     var customer: Customer
     var accounts: [Account]
-    @State private var account: Account = Account(_id: "66e62ed29683f20dd5189c6e", type: "balance", nickname: "Debit", rewards: 0, balance: 1000.0, account_number: nil, customer_id: "66e613bc9683f20dd5189c26")
+    @State private var account: Account
+    
+    init(customer: Customer, accounts: [Account]) {
+        self.customer = customer
+        self.accounts = accounts
+        self._account = State(initialValue: accounts.first ?? Account(_id: "", type: "", nickname: "", rewards: 0, balance: 0, account_number: nil, customer_id: ""))
+    }
     
     var body: some View {
-        Form {
-            TextField("PhoneNumber", text: $phoneNumber, prompt: Text("PhoneNUmber"))
-            
-            TextField("Amount", text: $amount, prompt: Text("Amount"))
-                .keyboardType(.decimalPad)
-            
-            Picker("Account", selection: $account, content: {
-                ForEach(accounts, id: \._id){
-                    account in
-                    Text(account.nickname).tag(account)
-                }
-            })
-            
-            Button(action: {
-                nfcReader.beginScanning()
-                phoneNumber = loadVCard(nfcReader.scannedText) ?? ""
-                
-            }) {
-                Text("Scan VCard")
-            }
-            
-            Button(action: {
-                // Try to convert amount to Double
-                guard let amount = Double(amount) else {
-                    print("Invalid amount. Please enter a valid number.")
-                    return
-                }
-                
-                // Validate phone number (assuming a simple validation)
-                guard isValidPhoneNumber(phoneNumber) else {
-                    print("Invalid phone number. Please enter a valid phone number.")
-                    return
-                }
-                
-                // Check that the account is not nil
-//                guard let account = self.account else {
-//                    print("Account is missing.")
-//                    return
-//                }
-                
-                // Call the createECheq function
-                createECheq(checkingAccountId: account._id, phoneNumber: phoneNumber, amount: amount) { result in
-                    DispatchQueue.main.async { // Ensure UI updates happen on the main thread
-                        switch result {
-                        case .success(let transferID):
-                            print("eCheq created with transfer ID: \(transferID)")
-                            dismiss()
-                            // You can display an alert or update the UI here to notify the user of success
-                        case .failure(let error):
-                            print("Failed to create eCheq: \(error.localizedDescription)")
-                            // You can display an alert or update the UI here to notify the user of failure
+        NavigationView {
+            ScrollView {
+                VStack(spacing: 0) {
+                    GeometryReader { geometry in
+                        VStack (spacing: 0){
+                            Spacer()
+                            AppLogoHeader()
+                                .padding(.top)
+                            Spacer()
+                            Text("MoBi Movement")
+                                .font(.system(size: 30))
+                                .multilineTextAlignment(.center)
+                                .bold()
+                                .foregroundColor(.white)
+                            Spacer()
+                        }
+                        .frame(width: geometry.size.width, height: geometry.size.height / 1.2 )
+                        .background(randomDarkBlueGradient())
+                    }
+                    .frame(height: UIScreen.main.bounds.height / 3)
+                    .padding(.top,-62)
+                    
+                    VStack(spacing: 20) {
+                        HStack{
+                            Text("Recipient Details")
+                                .font(.headline)
+                            Spacer()
+                        }
+                        HStack{
+                            Section{
+                                HStack {
+                                    Image(systemName: "phone")
+                                        .foregroundColor(.blue)
+                                    TextField("Phone Number", text: $phoneNumber)
+                                        .keyboardType(.phonePad)
+                                    
+                                }
+                                .padding()
+                                .background(Color(.systemGray6))
+                                .cornerRadius(10)
+                            }
+                            
+                            Button(action: {
+                                nfcReader.beginScanning()
+                                phoneNumber = loadVCard(nfcReader.scannedText) ?? ""
+                            }) {
+                                HStack {
+                                    Image(systemName: "viewfinder")
+                                    Text("Scan")
+                                }
+                            }
+                            .padding()
+                            .background(Color(hex: "#0d507a"))
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                        }
+                        
+                        Section {
+                            HStack{
+                                Text("Transaction Details")
+                                    .font(.headline)
+                                Spacer()
+                            }
+                            HStack(spacing: 10) {
+                                VStack {
+                                    HStack {
+                                        Image(systemName: "dollarsign.circle")
+                                            .foregroundColor(.green)
+                                        TextField("Amount", text: $amount)
+                                            .keyboardType(.decimalPad)
+                                    }
+                                    .padding()
+                                    .background(Color(.systemGray6))
+                                    .cornerRadius(10)
+                                }
+                                .frame(height: 50)  // Set a fixed height
+                                
+                                VStack {
+                                    Picker("Account", selection: $account) {
+                                        ForEach(accounts, id: \._id) { account in
+                                            Text(account.nickname).tag(account)
+                                        }
+                                    }
+                                    .pickerStyle(MenuPickerStyle())
+                                    .padding(.horizontal)
+                                }
+                                .frame(height: 50)  // Set the same fixed height
+                                .background(Color(.systemGray6))
+                                .cornerRadius(10)
+                            }
+                        }
+                        
+                        Button(action: sendECheq) {
+                            Text("Send eCheq")
+                                .frame(minWidth: 0, maxWidth: .infinity)
+                                .padding()
+                                .background(Color(hex: "#0d507a"))
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                                .shadow(color: .gray.opacity(0.5), radius: 5, x: 0, y: 2)
                         }
                     }
+                    .padding()
                 }
-            }) {
-                Text("Create")
             }
+            .navigationBarHidden(true)
+            .alert(isPresented: $showingAlert) {
+                Alert(title: Text("eCheq Status"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+            }
+
         }
-        .alert(isPresented: $nfcReader.showAlert) {
-            Alert(title: Text("NFC"), message: Text(nfcReader.alertMessage), dismissButton: .default(Text("OK")))
+    }
+    
+    private func sendECheq() {
+        guard let amount = Double(amount), amount > 0 else {
+            alertMessage = "Please enter a valid amount."
+            showingAlert = true
+            return
+        }
+        
+        guard isValidPhoneNumber(phoneNumber) else {
+            alertMessage = "Please enter a valid phone number."
+            showingAlert = true
+            return
+        }
+        
+        createECheq(checkingAccountId: account._id, phoneNumber: phoneNumber, amount: amount) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let transferID):
+                    alertMessage = "eCheq sent successfully! Transfer ID: \(transferID)"
+                    showingAlert = true
+                    dismiss()
+                case .failure(let error):
+                    alertMessage = "Failed to send eCheq: \(error.localizedDescription)"
+                    showingAlert = true
+                }
+            }
         }
     }
     
@@ -150,9 +234,8 @@ struct eCheqSendView: View {
         return nil
     }
     
-    // Function to validate phone number (simple example)
     func isValidPhoneNumber(_ phoneNumber: String) -> Bool {
-        let phoneNumberRegex = "^[+]?[0-9]{10,15}$" // A simple regex for validation
+        let phoneNumberRegex = "^[+]?[0-9]{10,15}$"
         let predicate = NSPredicate(format: "SELF MATCHES %@", phoneNumberRegex)
         return predicate.evaluate(with: phoneNumber)
     }
