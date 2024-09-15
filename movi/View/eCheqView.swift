@@ -48,7 +48,7 @@ struct eCheqView: View {
                             Spacer()
                             AppLogoHeader()
                             Spacer()
-                            Text("MoBi ECheqs")
+                            Text("ECheq")
                                 .font(.system(size: 30))
                                 .multilineTextAlignment(.center)
                                 .bold()

@@ -17,13 +17,13 @@ struct ContentView: View {
     
     var body: some View {
         TabView {
-            AccountView(customer: customer, accounts: accounts).tabItem { Label("\(navigationState.shouldNavigateToDestination)", systemImage: "person") }.tag(1)
+            AccountView(customer: customer, accounts: accounts).tabItem { Label("Account", systemImage: "person") }.tag(1)
             eCheqView(customer: customer, accounts: accounts).tabItem { Label("eCheq", systemImage: "flowchart") }.tag(2)
             ExploreView().tabItem { Label("Explore", systemImage: "magnifyingglass")}.tag(3)
 
         }
         .sheet(isPresented: $navigationState.shouldNavigateToDestination, content: {
-            eCheqSendView(amount: String(navigationState.amount), customer: customer, accounts: accounts)
+            eCheqSendView(customer: customer, accounts: accounts)
         })
         
     }
