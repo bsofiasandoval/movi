@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-
 struct eCheqView: View {
     @State private var activeSheet: ActiveSheet?
 

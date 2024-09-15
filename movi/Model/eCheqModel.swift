@@ -9,16 +9,6 @@ import Foundation
 
 // MARK: - Codable Structs
 
-struct Account: Codable {
-    let _id: String
-    let type: String
-    let nickname: String
-    let rewards: Int
-    let balance: Double
-    let account_number: String?
-    let customer_id: String
-}
-
 struct NewAccount: Codable {
     let type: String
     let nickname: String
@@ -65,12 +55,6 @@ struct TransferRequest: Codable {
     let amount: Double
     let description: String?
 }
-
-// MARK: - Global Constants
-
-let baseURL = "http://api.nessieisreal.com"
-let key = "c4829ff50727c58165e22d423e3c4e9f"
-let MoBiId = "66e614079683f20dd5189c28"
 
 // MARK: - Functions
 
