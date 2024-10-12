@@ -75,7 +75,7 @@ struct eCheqSendView: View {
        @State private var account: Account? = nil
     
 
-    
+
     var body: some View {
         NavigationView {
             ScrollView {

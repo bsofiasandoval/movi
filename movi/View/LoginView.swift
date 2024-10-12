@@ -25,15 +25,35 @@ struct LoginView: View {
                         .padding(.top, 40)
                         .padding(.bottom, 40)
                     
-
                     NavigationLink("Login", destination: {
                         // TODO credential validation
                         ContentView(customer: Customer(_id: "66e613bc9683f20dd5189c26", first_name: "Alonso", last_name: "Huerta", address: Address(street_number: "333", street_name: "Street Name", city: "MTY", state: "NL", zip: "96400")), accounts: [Account(_id: "66e62ed29683f20dd5189c6e", type: "balance", nickname: "Debit", rewards: 0, balance: 0.0, account_number: nil, customer_id: "66e613bc9683f20dd5189c26")])
                             .navigationBarBackButtonHidden()
                     })
                     .buttonStyle(.bordered)
-                    
-
+                    Form {
+                        Section {
+                            HStack {
+                                Image(systemName: "person")
+                                TextField("User", text: $user, prompt: Text("Username"))
+                            }
+                            HStack {
+                                Image(systemName: "key")
+                                SecureField("Password", text: $password, prompt: Text("Password"))
+                            }
+                        }
+                        
+                        Section {
+                            NavigationLink("Login", destination: {
+                                // TODO credential validation
+                                ContentView(customer: Customer(_id: "66e613bc9683f20dd5189c26", first_name: "Alonso", last_name: "Huerta", address: Address(street_number: "333", street_name: "Street Name", city: "MTY", state: "NL", zip: "96400")), accounts: [Account(_id: "66e62ed29683f20dd5189c6e", type: "balance", nickname: "Debit", rewards: 0, balance: 0, account_number: nil, customer_id: "66e613bc9683f20dd5189c26")])
+                                    .navigationBarBackButtonHidden()
+                            })
+                            .frame(maxWidth: .infinity, alignment: .center)
+                        }
+                    }
+                   
+                    .background(Color.clear)
                 }
             }
         }
