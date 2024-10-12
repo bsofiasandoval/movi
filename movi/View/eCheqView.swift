@@ -56,7 +56,7 @@ struct eCheqView: View {
                             Spacer()
                         }
                         .frame(width: geometry.size.width, height: geometry.size.height / 2 )
-                        .background(randomDarkBlueGradient())
+                        .background(randomRedGradient())
                     }
                     .frame(height: UIScreen.main.bounds.height / 3)
                     .padding(.bottom, -160)
@@ -90,7 +90,7 @@ struct eCheqView: View {
                             Label("Send", systemImage: "square.and.arrow.up")
                                 .frame(minWidth: 150, minHeight: 50)
                         })
-                        .background(Color(hex: "#0d507a"))
+                        .background(Color(hex: "#EC0029"))
                         .foregroundColor(.white)
                         .cornerRadius(10)
                         .padding()
@@ -103,7 +103,7 @@ struct eCheqView: View {
                             Label("Receive", systemImage: "square.and.arrow.down")
                                 .frame(minWidth: 150, minHeight: 50)
                         })
-                        .background(Color(hex: "#0d507a"))
+                        .background(Color(hex: "#EC0029"))
                         .foregroundColor(.white)
                         .cornerRadius(10)
                         .padding()

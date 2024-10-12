@@ -28,15 +28,8 @@ struct CreateECheq: AppIntent {
     var amount: Double
     
     func perform() async throws -> some IntentResult {
-//        print("HERE")
-//        createECheq(checkingAccountId: "66e62ed29683f20dd5189c6e", phoneNumber: "123-456-7890", amount: amount){
-//            transferId in
-//            print(transferId)
-//        }
-        
         let navigationState = AppStateManager.shared.navigationState
                 
-                // Update the state to trigger navigation in the main app
                 DispatchQueue.main.async {
                     navigationState.shouldNavigateToDestination = true
                     navigationState.amount = amount
@@ -47,11 +40,13 @@ struct CreateECheq: AppIntent {
     static let openAppWhenRun: Bool = true
 }
 
+
 struct eCheqShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
-        AppShortcut(intent: CreateECheq(), phrases: ["Create \(.applicationName)"], shortTitle: "Create mobi", systemImageName: "dollarsign.circle")
+        AppShortcut(intent: CreateECheq(), phrases: ["Create \(.applicationName)", "Create mobi", "Demo it", "Create moubi", "Create mobi"], shortTitle: "Create mobi", systemImageName: "dollarsign.circle")
     }
 }
+
 
 import UIKit
 import Intents

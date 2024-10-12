@@ -23,7 +23,7 @@ struct ContentView: View {
 
         }
         .sheet(isPresented: $navigationState.shouldNavigateToDestination, content: {
-            eCheqSendView(customer: customer, accounts: accounts)
+            eCheqSendView( amount: String(navigationState.amount), customer: customer, accounts: accounts)
         })
         
     }

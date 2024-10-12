@@ -31,7 +31,7 @@ struct MicroSavingsView: View {
                             Spacer()
                         }
                         .frame(width: geometry.size.width, height: geometry.size.height / 1.2)
-                        .background(randomDarkBlueGradient())
+                        .background(randomRedGradient())
                     }
                     .frame(height: UIScreen.main.bounds.height / 3)
                     

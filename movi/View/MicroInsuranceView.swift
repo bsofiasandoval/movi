@@ -38,7 +38,7 @@ struct MicroInsuranceView: View {
                             Spacer()
                         }
                         .frame(width: geometry.size.width, height: geometry.size.height / 1.2)
-                        .background(randomDarkBlueGradient())
+                        .background(randomRedGradient())
                     }
                     .frame(height: UIScreen.main.bounds.height / 3)
                     
@@ -87,7 +87,7 @@ struct MicroInsuranceView: View {
         }
         .padding()
         .frame(maxWidth: .infinity)
-        .background(randomDarkBlueGradient())
+        .background(randomRedGradient())
         .foregroundColor(.white)
         .cornerRadius(15)
     }

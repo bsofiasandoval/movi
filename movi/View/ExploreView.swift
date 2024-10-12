@@ -23,7 +23,7 @@ struct ExploreView: View {
                         Spacer()
                     }
                     .frame(width: geometry.size.width, height: geometry.size.height / 2 )
-                    .background(randomDarkBlueGradient())
+                    .background(randomRedGradient())
                 }
                 .frame(height: UIScreen.main.bounds.height / 3)
                 
@@ -53,7 +53,7 @@ struct ExploreView: View {
                         .padding()
                         .frame(maxWidth: .infinity)
                         .frame(height: 140)
-                        .background(randomDarkBlueGradient())
+                        .background(randomRedGradient())
                         .cornerRadius(10)
                         .shadow(radius: 5)
                     }
@@ -83,7 +83,7 @@ struct ExploreView: View {
                         .padding()
                         .frame(maxWidth: .infinity)
                         .frame(height: 140)
-                        .background(blueComplementaryColor())
+                        .background(randomRedGradient())
                         .cornerRadius(10)
                         .shadow(radius: 5)
                     }
@@ -113,7 +113,7 @@ struct ExploreView: View {
                         .padding()
                         .frame(maxWidth: .infinity)
                         .frame(height: 140)
-                        .background(blueComplementaryColor())
+                        .background(randomRedGradient())
                         .cornerRadius(10)
                         .shadow(radius: 5)
                     }
@@ -141,10 +141,10 @@ func blueComplementaryColor() -> Color {
 }
 
 
-func randomDarkBlueGradient() -> LinearGradient {
-    let baseColor = Color(hex: "#0d507a") // Custom hex initializer
+func randomRedGradient() -> LinearGradient {
+    let baseColor = Color(hex: "#EC0029") // Custom hex initializer
     let lighterBlue = Color(
-        red: 0.2, green: 0.6, blue: 0.8 // Lighter complementary blue
+        red: 1, green: 0, blue: 0,  opacity: 0.4 // Lighter complementary blue
     )
     
     return LinearGradient(

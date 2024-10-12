@@ -26,64 +26,55 @@ class NFCReader: NSObject, ObservableObject, NFCNDEFReaderSessionDelegate {
         }
     
     func beginScanning() {
-        guard NFCNDEFReaderSession.readingAvailable else {
-            alertMessage = "NFC is not available on this device."
-            showAlert = true
-            return
-        }
-        
-        session = NFCNDEFReaderSession(delegate: self, queue: nil, invalidateAfterFirstRead: true)
-        session?.alertMessage = "Hold your iPhone near the NFC tag."
-        session?.begin()
+            guard NFCNDEFReaderSession.readingAvailable else {
+                alertMessage = "NFC is not available on this device."
+                showAlert = true
+                return
+            }
+            
+            session = NFCNDEFReaderSession(delegate: self, queue: nil, invalidateAfterFirstRead: true)
+            session?.alertMessage = "Hold your phone near recipient's."
+            session?.begin()
     }
     
     // MARK: - NFCNDEFReaderSessionDelegate Methods
-    
+  
     func readerSession(_ session: NFCNDEFReaderSession, didInvalidateWithError error: Error) {
-        DispatchQueue.main.async {
-            self.alertMessage = error.localizedDescription
-//            self.showAlert = true
+            DispatchQueue.main.async {
+                self.alertMessage = error.localizedDescription
+    //            self.showAlert = true
+            }
         }
-    }
     
     func readerSession(_ session: NFCNDEFReaderSession, didDetectNDEFs messages: [NFCNDEFMessage]) {
-        print("HERE")
-        for message in messages {
-            for record in message.records {
-                if let payload = String(data: record.payload, encoding: .utf8) {
-                    DispatchQueue.main.async {
-                        print("\(payload)")
-                        self.scannedText = payload
-                        self.alertMessage = "NFC Tag Detected: \(payload)"
-//                        self.showAlert = true
+            print("HERE")
+            for message in messages {
+                for record in message.records {
+                    if let payload = String(data: record.payload, encoding: .utf8) {
+                        DispatchQueue.main.async {
+                            print("\(payload)")
+                            self.scannedText = payload
+                            self.alertMessage = "NFC Tag Detected: \(payload)"
+    //                        self.showAlert = true
+                        }
                     }
                 }
             }
         }
-    }
 }
 
 struct eCheqSendView: View {
-    @StateObject private var nfcReader = NFCReader()
-    @State private var phoneNumber = ""
-
-    @State private var amount = ""
-    @State private var showingAlert = false
-    @State private var alertMessage = ""
-
+    @State var amount:String = ""
+       var customer: Customer
+       var accounts: [Account]
+       @StateObject private var nfcReader = NFCReader()
+       @State  var phoneNumber = ""
+       @State private var showingAlert = false
+       @State private var alertMessage = ""
+       @Environment(\.dismiss) private var dismiss
+       @State private var account: Account? = nil
     
-    @Environment(\.dismiss) var dismiss
-    
-    var customer: Customer
-    var accounts: [Account]
 
-    @State private var account: Account? = nil
-    
-    init(customer: Customer, accounts: [Account]) {
-        self.customer = customer
-        self.accounts = accounts
-        self._account = State(initialValue: accounts.first ?? Account(_id: "", type: "", nickname: "", rewards: 0, balance: 0, account_number: nil, customer_id: ""))
-    }
     
     var body: some View {
         NavigationView {
@@ -103,7 +94,7 @@ struct eCheqSendView: View {
                             Spacer()
                         }
                         .frame(width: geometry.size.width, height: geometry.size.height / 1.2 )
-                        .background(randomDarkBlueGradient())
+                        .background(randomRedGradient())
                     }
                     .frame(height: UIScreen.main.bounds.height / 3)
                     .padding(.top,-62)
@@ -184,7 +175,7 @@ struct eCheqSendView: View {
                             Text("Send eCheq")
                                 .frame(minWidth: 0, maxWidth: .infinity)
                                 .padding()
-                                .background(Color(hex: "#0d507a"))
+                                .background(Color(hex: "#EC0029"))
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                                 .shadow(color: .gray.opacity(0.5), radius: 5, x: 0, y: 2)

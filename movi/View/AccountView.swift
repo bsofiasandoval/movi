@@ -44,7 +44,7 @@ struct AccountView: View {
                         Spacer()
                     }
                     .frame(width: geometry.size.width, height: geometry.size.height / 2 )
-                    .background(randomDarkBlueGradient())
+                    .background(randomRedGradient())
                 }
                 .frame(height: UIScreen.main.bounds.height / 3)
                 .padding(.bottom, -153)

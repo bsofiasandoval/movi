@@ -32,7 +32,7 @@ struct MicroCreditView: View {
                             Spacer()
                         }
                         .frame(width: geometry.size.width, height: geometry.size.height / 1.2)
-                        .background(randomDarkBlueGradient())
+                        .background(randomRedGradient())
                     }
                     .frame(height: UIScreen.main.bounds.height / 3)
                     
@@ -122,7 +122,7 @@ struct MicroCreditView: View {
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(Color(hex: "#0d507a"))
+                .background(Color(hex: "#EC0029"))
                 .cornerRadius(10)
         }
     }
